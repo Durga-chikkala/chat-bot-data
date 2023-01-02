@@ -1,0 +1,629 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Query clarifier using NLP (Node)",
+    "description": "This is the central one which connects the ML microservice and DB microservice and Frontend .\nThe authentication will be taken place in this\nIt connects with the frontend and make a call to ML microservice \nand it is also gives the data of most frequently asked Questions this will be performed by the Database and gives the array of output ",
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/user/login": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "takes the username and password for authentication",
+        "description": "username and password will be in the request body we validates it and provide jwt token",
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username or password"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Logs out current logged in user session",
+        "description": "Logs out current logged in user session",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "takes the user data to register the user to the application",
+        "description": "username and password will be in the request body we validates it and provide jwt token",
+        "operationId": "signup",
+        "requestBody": {
+          "description": "Username and Password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Signup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Signup"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "patch": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Updates the UserInfo",
+        "description": "this is used to update the user info which is taken during signup",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updates email or phone number or password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "chdurga2001@gmail.com"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": 6304566545
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Durga@123"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "chdurga2001@gmail.com"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": 6304566545
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "Durga@123"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Entity Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Updates the UserInfo",
+        "description": "this is used to update the user info which is taken during signup",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Signup"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Entity not found"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/user/query": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Updates the UserInfo",
+        "description": "this is used to update the user info which is taken during signup",
+        "operationId": "getQuery",
+        "parameters": [
+          {
+            "name": "Question",
+            "in": "query",
+            "description": "question of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "solution": {
+                      "type": "string",
+                      "example": "welcome how can I help you"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/user/frequentQueries": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Updates the UserInfo",
+        "description": "this is used to update the user info which is taken during signup",
+        "operationId": "getFrequentQueries",
+        "parameters": [
+          {
+            "name": "related",
+            "in": "query",
+            "description": "question of the user",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "Hii"
+                        },
+                        "response": {
+                          "type": "string",
+                          "example": "welcome how can I help you"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/db": {
+      "post": {
+        "tags": [
+          "Dataservice"
+        ],
+        "summary": "Post the Question and Answer in the Database",
+        "description": "we will store Question and answer and also the count",
+        "operationId": "signups",
+        "requestBody": {
+          "description": "Username and Password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Database"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Database"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      }
+    },
+    "/db/getAll": {
+      "get": {
+        "tags": [
+          "Dataservice"
+        ],
+        "summary": "gets the data of all the Questions present in the database",
+        "description": "gets all the Questions and answers",
+        "operationId": "getAllQuestions",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Database"
+                },
+                "examples": {
+                  "example1": {
+                    "value": [
+                      {
+                        "id": 1,
+                        "title": "What is the college code of 2nd campus?",
+                        "solution": "The code is :ACET",
+                        "count": 4
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      }
+    },
+    "/db/{Question}": {
+      "get": {
+        "tags": [
+          "Dataservice"
+        ],
+        "summary": "gets the data of the Question and answer present in the database",
+        "description": "gets the data of the Question and answer present in the database",
+        "operationId": "getbyQuestion",
+        "parameters": [
+          {
+            "name": "Question",
+            "in": "path",
+            "description": "question of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Database"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Dataservice"
+        ],
+        "summary": "Will update the count in the db",
+        "description": "Increases the count field",
+        "operationId": "updatecount",
+        "parameters": [
+          {
+            "name": "Question",
+            "in": "path",
+            "description": "question of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Username and Password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "example": 10
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Database"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "Durga132"
+          },
+          "password": {
+            "type": "string",
+            "example": "Durga@111"
+          }
+        }
+      },
+      "Database": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "What is the college code of 2nd campus?"
+          },
+          "solution": {
+            "type": "string",
+            "example": "The code is :ACET"
+          },
+          "count": {
+            "type": "integer",
+            "example": 4
+          },
+          "additional": {
+            "type": "string",
+            "example": "The code is :ACET"
+          },
+          "count1": {
+            "type": "integer",
+            "example": 4
+          }
+        }
+      },
+      "Signup": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "Durga"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "chikkala"
+          },
+          "Dob": {
+            "type": "string",
+            "example": "17-04-2001"
+          },
+          "Phone": {
+            "type": "integer",
+            "format": "int64",
+            "example": 6304566534
+          },
+          "Gender": {
+            "type": "string",
+            "example": "Male",
+            "enum": [
+              "Male",
+              "Female"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "example": "Durgach2001@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Durga@111"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
