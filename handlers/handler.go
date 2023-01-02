@@ -26,7 +26,6 @@ func (h Handler) Create(c *fiber.Ctx) error {
 
 	err = validateInput(input)
 	if err != nil {
-		c.Status(400)
 		return err
 	}
 

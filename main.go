@@ -15,7 +15,7 @@ func main() {
 	h := handlers.New(s)
 
 	app.Post("/db", h.Create)
-	app.Get("/db", h.Get)
+	app.Get("/db/getAll", h.Get)
 	app.Get("/db/:question", h.GetByQuestion)
 	app.Patch("/db/:question", h.PatchByQuestion)
 
