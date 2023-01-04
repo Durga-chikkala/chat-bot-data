@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"strings"
 
 	"github.com/Dataservicee/models"
 	"github.com/Dataservicee/store"
@@ -24,7 +25,7 @@ func (h Handler) Create(c *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
-	err = validateInput(input)
+	err = validateInput(&input)
 	if err != nil {
 		return err
 	}
@@ -49,6 +50,8 @@ func (h Handler) GetByQuestion(c *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
+	question = refactorQuestion(question)
+
 	resp, err := h.Queries.GetByQuestion(c, question)
 	c.JSON(resp)
 
@@ -63,18 +66,20 @@ func (h Handler) PatchByQuestion(c *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
+	question = refactorQuestion(question)
+
 	var input models.QueriesData
 	err := c.BodyParser(&input)
 	if err != nil {
 		return fiber.ErrBadRequest
 	}
 
-	resp, err := h.Queries.PatchByQuestion(c, input.Count)
+	resp, err := h.Queries.PatchByQuestion(c, input.Count, question)
 	c.JSON(resp)
 	return err
 }
 
-func validateInput(input models.QueriesData) error {
+func validateInput(input *models.QueriesData) error {
 	if input.Question == "" {
 		return fiber.EmptyFieldError{Key: "title"}
 	}
@@ -83,5 +88,13 @@ func validateInput(input models.QueriesData) error {
 		return fiber.EmptyFieldError{Key: "Solution"}
 	}
 
+	input.Question = refactorQuestion(input.Question)
+
 	return nil
+}
+
+func refactorQuestion(question string) string {
+
+	question = strings.TrimSpace(question)
+	return strings.ReplaceAll(question, " ", "-")
 }
