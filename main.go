@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Dataservicee/handlers"
+	"github.com/Dataservicee/models"
 	"github.com/Dataservicee/store"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
@@ -19,7 +20,7 @@ func main() {
 		log.Printf("DB connection failed with Err:", err)
 		return
 	}
-
+	db.AutoMigrate(models.QueriesData{})
 	s := store.New(db)
 	h := handlers.New(s)
 
