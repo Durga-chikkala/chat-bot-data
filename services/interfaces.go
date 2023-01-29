@@ -1,16 +1,9 @@
-package store
+package services
 
 import (
 	"github.com/Dataservicee/models"
 	"github.com/gin-gonic/gin"
 )
-
-type QueriesEndPoints interface {
-	Create(c *gin.Context, data models.QueryInfo) (models.QueryInfo, error)
-	GetByQuestion(c *gin.Context, question string) (models.QueryInfo, error)
-	Get(c *gin.Context) ([]models.QueryInfo, error)
-	PatchByQuestion(c *gin.Context, count int64, question string) (models.QueryInfo, error)
-}
 
 type User interface {
 	Create(c *gin.Context, data models.UserInfo) (models.UserInfo, error)
