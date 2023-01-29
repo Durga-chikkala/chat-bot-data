@@ -3,9 +3,9 @@ package errors
 import "fmt"
 
 type ErrorResponse struct {
-	StatusCode int
-	Code       string
-	Reason     string
+	StatusCode int    `json:"statusCode,omitempty"`
+	Code       string `json:"code,omitempty"`
+	Reason     string `json:"reason,omitempty"`
 }
 
 func (e ErrorResponse) Error() string {

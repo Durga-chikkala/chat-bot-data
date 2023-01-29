@@ -62,6 +62,7 @@ func (s service) Get(c *gin.Context, username string, password string) (models.U
 }
 
 func (s service) PatchByID(c *gin.Context, ID string, user models.UserInfo) (models.UserInfo, error) {
+	user.Password = encrypt(user.Password)
 	userInfo, err := s.User.PatchByID(c, ID, user)
 	if err != nil {
 		return models.UserInfo{}, err

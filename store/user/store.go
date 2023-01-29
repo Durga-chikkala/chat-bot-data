@@ -18,7 +18,6 @@ func New(db *gorm.DB) database {
 }
 
 func (d database) Create(c *gin.Context, user models.UserInfo) (models.UserInfo, error) {
-
 	result := d.db.Create(&user)
 	if result.Error != nil {
 		fmt.Println(result.Error)
@@ -36,7 +35,7 @@ func (d database) Get(c *gin.Context, username string, password string) (models.
 	var users models.UserInfo
 	result := d.db.Find(&users, "email=? and password=?", username, password)
 	if result.Error != nil {
-		return models.UserInfo{}, result.Error
+		return models.UserInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	return users, nil
@@ -47,7 +46,7 @@ func (d database) GetByID(c *gin.Context, ID string) (models.UserInfo, error) {
 
 	result := d.db.Find(&data, "id=?", ID)
 	if result.Error != nil {
-		return models.UserInfo{}, result.Error
+		return models.UserInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	if result.RowsAffected == 0 {
@@ -62,9 +61,9 @@ func (d database) GetByID(c *gin.Context, ID string) (models.UserInfo, error) {
 func (d database) PatchByID(c *gin.Context, ID string, user models.UserInfo) (models.UserInfo, error) {
 	var data models.UserInfo
 
-	result := d.db.Model(&data).Where("id=?", ID).Update("email", user.Email)
+	result := d.db.Model(&data).Where("id=?", ID).Update("password", user.Password)
 	if result.Error != nil {
-		return models.UserInfo{}, result.Error
+		return models.UserInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	if result.RowsAffected == 0 {

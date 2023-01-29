@@ -4,8 +4,8 @@ import (
 	"github.com/Dataservicee/errors"
 	"github.com/Dataservicee/models"
 	"github.com/gin-gonic/gin"
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 )
 
@@ -21,6 +21,7 @@ func (d database) Create(c *gin.Context, input models.QueryInfo) (models.QueryIn
 
 	result := d.db.Create(&input)
 	if result.Error != nil {
+		log.Print(result.Error)
 		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
@@ -35,7 +36,7 @@ func (d database) Get(c *gin.Context) ([]models.QueryInfo, error) {
 	var data []models.QueryInfo
 	result := d.db.Find(&data)
 	if result.Error != nil {
-		return []models.QueryInfo{}, result.Error
+		return []models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	return data, nil
@@ -46,12 +47,12 @@ func (d database) GetByQuestion(c *gin.Context, question string) (models.QueryIn
 
 	result := d.db.Find(&data, "question=?", question+"?")
 	if result.Error != nil {
-		return models.QueryInfo{}, result.Error
+		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	if result.RowsAffected == 0 {
 
-		return models.QueryInfo{}, fiber.ErrNotFound
+		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusNotFound, Code: "NOT FOUND", Reason: "question Not Found"}
 
 	}
 
@@ -61,15 +62,25 @@ func (d database) GetByQuestion(c *gin.Context, question string) (models.QueryIn
 func (d database) PatchByQuestion(c *gin.Context, count int64, question string) (models.QueryInfo, error) {
 	var data models.QueryInfo
 
-	result := d.db.Model(&data).Where("question=?", question).Update("count", count)
+	result := d.db.Model(&data).Where("question=?", question+"?").Update("count", count)
 	if result.Error != nil {
-		return models.QueryInfo{}, result.Error
+		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	if result.RowsAffected == 0 {
 
-		return models.QueryInfo{}, fiber.ErrNotFound
+		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusNotFound, Code: "NOT FOUND", Reason: "question Not Found"}
 
+	}
+
+	return data, nil
+}
+
+func (d database) GetFrequentQuestions(c *gin.Context) ([]models.QueryInfo, error) {
+	var data []models.QueryInfo
+	result := d.db.Order("count DESC").Find(&data)
+	if result.Error != nil {
+		return []models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
 
 	return data, nil

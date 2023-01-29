@@ -52,7 +52,7 @@ func main() {
 	app.POST("/chatbot", queryHandler.Create)
 	app.GET("/chatbot", queryHandler.Get)
 	app.GET("/chatbot/:question", queryHandler.GetByQuestion)
-	//app.Get("/chatbot/frequentQuestions")
+	app.GET("/chatbot/frequentQuestions", queryHandler.GetFrequentQuestions)
 	app.PATCH("/chatbot/:question", queryHandler.PatchByQuestion)
 
 	// User Details

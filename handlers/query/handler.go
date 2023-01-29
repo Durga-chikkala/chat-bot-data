@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Dataservicee/errors"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"strings"
@@ -25,16 +26,16 @@ func (h Handler) Create(c *gin.Context) {
 
 	err := c.Bind(&input)
 	if err != nil {
-		c.JSON(400, errors.ErrorResponse{Code: "BAD REQUEST", Reason: "Invalid Body"})
+		c.JSON(http.StatusBadRequest, errors.ErrorResponse{Code: "BAD REQUEST", Reason: "Invalid Body"})
 		return
 	}
 
 	err = validateInput(&input)
 	if err != nil {
-		c.JSON(400, err)
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-
+	input.Id = uuid.NewString()
 	resp, err := h.Queries.Create(c, input)
 	if err != nil {
 		err := err.(errors.ErrorResponse)
@@ -46,7 +47,13 @@ func (h Handler) Create(c *gin.Context) {
 }
 
 func (h Handler) Get(c *gin.Context) {
-	resp, _ := h.Queries.Get(c)
+	resp, err := h.Queries.Get(c)
+	if err != nil {
+		err := err.(errors.ErrorResponse)
+		c.JSON(err.StatusCode, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, resp)
 }
 
@@ -55,13 +62,19 @@ func (h Handler) GetByQuestion(c *gin.Context) {
 	log.Print("question:", question)
 
 	if question == "" {
-		c.JSON(400, errors.ErrorResponse{Code: "BAD REQUEST", Reason: fmt.Sprintf("Missing parameter %v", "question")})
+		c.JSON(http.StatusBadRequest, errors.ErrorResponse{Code: "BAD REQUEST", Reason: fmt.Sprintf("Missing parameter %v", "question")})
 		return
 	}
 
 	question = refactorQuestion(question)
 
-	resp, _ := h.Queries.GetByQuestion(c, question)
+	resp, err := h.Queries.GetByQuestion(c, question)
+	if err != nil {
+		err := err.(errors.ErrorResponse)
+		c.JSON(err.StatusCode, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, resp)
 }
 
@@ -84,8 +97,24 @@ func (h Handler) PatchByQuestion(c *gin.Context) {
 	}
 
 	resp, err := h.Queries.PatchByQuestion(c, input.Count, question)
+	if err != nil {
+		err := err.(errors.ErrorResponse)
+		c.JSON(err.StatusCode, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, resp)
-	return
+}
+
+func (h Handler) GetFrequentQuestions(c *gin.Context) {
+	resp, err := h.Queries.GetFrequentQuestions(c)
+	if err != nil {
+		err := err.(errors.ErrorResponse)
+		c.JSON(err.StatusCode, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
 }
 
 func validateInput(input *models.QueryInfo) error {

@@ -10,6 +10,7 @@ type QueriesEndPoints interface {
 	GetByQuestion(c *gin.Context, question string) (models.QueryInfo, error)
 	Get(c *gin.Context) ([]models.QueryInfo, error)
 	PatchByQuestion(c *gin.Context, count int64, question string) (models.QueryInfo, error)
+	GetFrequentQuestions(c *gin.Context) ([]models.QueryInfo, error)
 }
 
 type User interface {
