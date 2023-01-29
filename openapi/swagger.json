@@ -1,32 +1,46 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Query clarifier using NLP (Node)",
-    "description": "This is the central one which connects the ML microservice and DB microservice and Frontend .\nThe authentication will be taken place in this\nIt connects with the frontend and make a call to ML microservice \nand it is also gives the data of most frequently asked Questions this will be performed by the Database and gives the array of output ",
+    "title": "Query clarifier using NLP (Golang)",
+    "description": "This is the DB microservice it contains two kinds of endpoints \n1.Query and 2.user\nIt stores the questions and answers and also updates the count as well\nand it is also gives the data of most frequently asked Questions this will be performed by the Database and gives the array of output ",
     "version": "1.0.1"
   },
   "paths": {
     "/user/login": {
       "get": {
         "tags": [
-          "Frontend"
+          "User"
         ],
         "summary": "takes the username and password for authentication",
-        "description": "username and password will be in the request body we validates it and provide jwt token",
+        "description": "username and password will be in the request body",
         "operationId": "login",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "email of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "password of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Signup"
                 }
               }
             }
@@ -40,28 +54,10 @@
         }
       }
     },
-    "/user/logout": {
-      "get": {
-        "tags": [
-          "Frontend"
-        ],
-        "summary": "Logs out current logged in user session",
-        "description": "Logs out current logged in user session",
-        "operationId": "logout",
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          },
-          "500": {
-            "description": "Internal server Error"
-          }
-        }
-      }
-    },
     "/signup": {
       "post": {
         "tags": [
-          "Frontend"
+          "User"
         ],
         "summary": "takes the user data to register the user to the application",
         "description": "username and password will be in the request body we validates it and provide jwt token",
@@ -100,10 +96,10 @@
     "/user/{id}": {
       "patch": {
         "tags": [
-          "Frontend"
+          "User"
         ],
-        "summary": "Updates the UserInfo",
-        "description": "this is used to update the user info which is taken during signup",
+        "summary": "Updates the password",
+        "description": "this is used to update the password which is taken during signup",
         "operationId": "updateUser",
         "parameters": [
           {
@@ -112,8 +108,7 @@
             "description": "ID of the user",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -124,14 +119,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "chdurga2001@gmail.com"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "example": 6304566545
-                  },
                   "password": {
                     "type": "string",
                     "example": "Durga@123"
@@ -139,8 +126,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -150,14 +136,6 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "email": {
-                      "type": "string",
-                      "example": "chdurga2001@gmail.com"
-                    },
-                    "phone": {
-                      "type": "string",
-                      "example": 6304566545
-                    },
                     "password": {
                       "type": "string",
                       "example": "Durga@123"
@@ -188,10 +166,10 @@
       },
       "get": {
         "tags": [
-          "Frontend"
+          "User"
         ],
-        "summary": "Updates the UserInfo",
-        "description": "this is used to update the user info which is taken during signup",
+        "summary": "Gets the UserInfo",
+        "description": "this is used to get the user info which is present in DB",
         "operationId": "getUser",
         "parameters": [
           {
@@ -200,8 +178,7 @@
             "description": "ID of the user",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -236,79 +213,14 @@
         ]
       }
     },
-    "/user/query": {
+    "/chatbot/frequentQuestions": {
       "get": {
         "tags": [
-          "Frontend"
+          "chatbot"
         ],
-        "summary": "Updates the UserInfo",
-        "description": "this is used to update the user info which is taken during signup",
-        "operationId": "getQuery",
-        "parameters": [
-          {
-            "name": "Question",
-            "in": "query",
-            "description": "question of the user",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "solution": {
-                      "type": "string",
-                      "example": "welcome how can I help you"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal server Error"
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      }
-    },
-    "/user/frequentQueries": {
-      "get": {
-        "tags": [
-          "Frontend"
-        ],
-        "summary": "Updates the UserInfo",
-        "description": "this is used to update the user info which is taken during signup",
+        "summary": "gets the data based on count",
+        "description": "we get collection of data based on count",
         "operationId": "getFrequentQueries",
-        "parameters": [
-          {
-            "name": "related",
-            "in": "query",
-            "description": "question of the user",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -320,13 +232,17 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "title": {
+                        "question": {
                           "type": "string",
                           "example": "Hii"
                         },
-                        "response": {
+                        "solution": {
                           "type": "string",
                           "example": "welcome how can I help you"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "example": 5
                         }
                       }
                     }
@@ -352,10 +268,10 @@
         ]
       }
     },
-    "/db": {
+    "/chatbot": {
       "post": {
         "tags": [
-          "Dataservice"
+          "chatbot"
         ],
         "summary": "Post the Question and Answer in the Database",
         "description": "we will store Question and answer and also the count",
@@ -365,7 +281,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Database"
+                "$ref": "#/components/schemas/DatabaseRequest"
               }
             }
           }
@@ -376,7 +292,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Database"
+                  "$ref": "#/components/schemas/DatabaseResponse"
                 }
               }
             }
@@ -388,12 +304,10 @@
             "description": "Internal server Error"
           }
         }
-      }
-    },
-    "/db/getAll": {
+      },
       "get": {
         "tags": [
-          "Dataservice"
+          "chatbot"
         ],
         "summary": "gets the data of all the Questions present in the database",
         "description": "gets all the Questions and answers",
@@ -404,7 +318,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Database"
+                  "$ref": "#/components/schemas/DatabaseResponse"
                 },
                 "examples": {
                   "example1": {
@@ -430,10 +344,10 @@
         }
       }
     },
-    "/db/{Question}": {
+    "/chatbot/{Question}": {
       "get": {
         "tags": [
-          "Dataservice"
+          "chatbot"
         ],
         "summary": "gets the data of the Question and answer present in the database",
         "description": "gets the data of the Question and answer present in the database",
@@ -455,7 +369,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Database"
+                  "$ref": "#/components/schemas/DatabaseResponse"
                 }
               }
             }
@@ -470,7 +384,7 @@
       },
       "patch": {
         "tags": [
-          "Dataservice"
+          "chatbot"
         ],
         "summary": "Will update the count in the db",
         "description": "Increases the count field",
@@ -508,7 +422,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Database"
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "example": 10
+                    }
+                  }
                 }
               }
             }
@@ -525,27 +445,14 @@
   },
   "components": {
     "schemas": {
-      "Login": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "example": "Durga132"
-          },
-          "password": {
-            "type": "string",
-            "example": "Durga@111"
-          }
-        }
-      },
-      "Database": {
+      "DatabaseResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "example": 1
+            "example": "32f7e7b3-4495-438c-a8a3-2c2f53fd5d76"
           },
-          "title": {
+          "question": {
             "type": "string",
             "example": "What is the college code of 2nd campus?"
           },
@@ -556,14 +463,19 @@
           "count": {
             "type": "integer",
             "example": 4
+          }
+        }
+      },
+      "DatabaseRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "example": "What is the college code of 2nd campus?"
           },
-          "additional": {
+          "solution": {
             "type": "string",
             "example": "The code is :ACET"
-          },
-          "count1": {
-            "type": "integer",
-            "example": 4
           }
         }
       },
@@ -618,11 +530,6 @@
             }
           }
         }
-      },
-      "api_key": {
-        "type": "apiKey",
-        "name": "api_key",
-        "in": "header"
       }
     }
   }
