@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/Dataservicee/models"
+	"github.com/chat-bot-data/models"
 	"github.com/gin-gonic/gin"
 )
 

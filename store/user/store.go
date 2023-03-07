@@ -2,8 +2,8 @@ package user
 
 import (
 	"fmt"
-	"github.com/Dataservicee/errors"
-	"github.com/Dataservicee/models"
+	"github.com/chat-bot-data/errors"
+	"github.com/chat-bot-data/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"

@@ -1,25 +1,25 @@
 package main
 
 import (
-	"github.com/Dataservicee/handlers/query"
+	"github.com/chat-bot-data/handlers/query"
 
-	handleruser "github.com/Dataservicee/handlers/user"
-	serviceuser "github.com/Dataservicee/services/user"
-	storequery "github.com/Dataservicee/store/query"
-	"github.com/Dataservicee/store/user"
+	handleruser "github.com/chat-bot-data/handlers/user"
+	serviceuser "github.com/chat-bot-data/services/user"
+	storequery "github.com/chat-bot-data/store/query"
+	"github.com/chat-bot-data/store/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 
-	"github.com/Dataservicee/models"
+	"github.com/chat-bot-data/models"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	app := gin.Default()
-	PORT := ":3000"
+	PORT := ":8080"
 
-	dsn := "host=localhost user=postgres password=password dbname=queries port=5432"
+	dsn := "host=localhost user=postgres password=root123 dbname=queries port=5432"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Printf("DB connection failed with Err:%v", err)
@@ -60,6 +60,7 @@ func main() {
 	app.GET("/user/login", userHandler.Get)
 	app.GET("user/:id", userHandler.GetByID)
 	app.PATCH("user/:id", userHandler.PatchByID)
+	a
 
 	log.Printf("The server is running at port:%v", PORT)
 	err = app.Run(PORT)

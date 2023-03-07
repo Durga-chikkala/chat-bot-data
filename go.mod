@@ -1,4 +1,4 @@
-module github.com/Dataservicee
+module github.com/chat-bot-data
 
 go 1.19
 

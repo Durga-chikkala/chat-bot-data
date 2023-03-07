@@ -1,9 +1,9 @@
 package user
 
 import (
-	"github.com/Dataservicee/errors"
-	"github.com/Dataservicee/models"
-	"github.com/Dataservicee/store"
+	"github.com/chat-bot-data/errors"
+	"github.com/chat-bot-data/models"
+	"github.com/chat-bot-data/store"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.org/x/exp/slices"

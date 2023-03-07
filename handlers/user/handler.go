@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Dataservicee/errors"
-	"github.com/Dataservicee/models"
-	"github.com/Dataservicee/services"
+	"github.com/chat-bot-data/errors"
+	"github.com/chat-bot-data/models"
+	"github.com/chat-bot-data/services"
 	"github.com/gin-gonic/gin"
 )
 
