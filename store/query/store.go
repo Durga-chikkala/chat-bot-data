@@ -45,7 +45,7 @@ func (d database) Get(c *gin.Context) ([]models.QueryInfo, error) {
 func (d database) GetByQuestion(c *gin.Context, question string) (models.QueryInfo, error) {
 	var data models.QueryInfo
 
-	result := d.db.Find(&data, "question=?", question+"?")
+	result := d.db.Find(&data, "question=?", question)
 	if result.Error != nil {
 		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}
@@ -62,7 +62,7 @@ func (d database) GetByQuestion(c *gin.Context, question string) (models.QueryIn
 func (d database) PatchByQuestion(c *gin.Context, count int64, question string) (models.QueryInfo, error) {
 	var data models.QueryInfo
 
-	result := d.db.Model(&data).Where("question=?", question+"?").Update("count", count)
+	result := d.db.Model(&data).Where("question=?", question).Update("count", count)
 	if result.Error != nil {
 		return models.QueryInfo{}, errors.ErrorResponse{StatusCode: http.StatusInternalServerError, Code: "INTERNAL SERVER ERROR", Reason: "DB ERROR"}
 	}

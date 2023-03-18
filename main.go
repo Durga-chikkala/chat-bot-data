@@ -60,7 +60,6 @@ func main() {
 	app.GET("/user/login", userHandler.Get)
 	app.GET("user/:id", userHandler.GetByID)
 	app.PATCH("user/:id", userHandler.PatchByID)
-	a
 
 	log.Printf("The server is running at port:%v", PORT)
 	err = app.Run(PORT)
