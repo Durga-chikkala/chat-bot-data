@@ -86,8 +86,6 @@ func validateUser(user models.UserInfo) error {
 		return errors.ErrorResponse{StatusCode: http.StatusBadRequest, Code: "BAD REQUEST", Reason: "Invalid Email"}
 	case !isPhone(user.Phone):
 		return errors.ErrorResponse{StatusCode: http.StatusBadRequest, Code: "BAD REQUEST", Reason: "Invalid Phone"}
-	case !validGender(user.Gender):
-		return errors.ErrorResponse{StatusCode: http.StatusBadRequest, Code: "BAD REQUEST", Reason: "Invalid Gender"}
 	}
 	return nil
 }

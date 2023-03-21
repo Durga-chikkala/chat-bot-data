@@ -8,12 +8,12 @@ type QueryInfo struct {
 }
 
 type UserInfo struct {
-	ID        string `json:"id,omitempty"`
+	ID        string `gorm:"unique" json:"id,omitempty`
 	FirstName string `json:"firstName,omitempty"`
 	LastName  string `json:"lastName,omitempty"`
 	Dob       string `json:"dob,omitempty"`
-	Phone     string `json:"phone,omitempty"`
+	Phone     string `gorm:"unique" json:"phone,omitempty"`
 	Gender    string `json:"gender,omitempty"`
-	Email     string `json:"email,omitempty"`
+	Email     string `gorm:"unique" json:"email,omitempty"`
 	Password  string `json:"password,omitempty"`
 }
