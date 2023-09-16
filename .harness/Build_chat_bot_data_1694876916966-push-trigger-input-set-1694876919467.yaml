@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_chat_bot_data_1694876916966-push-trigger-input-set
+  identifier: Build_chat_bot_data_1694876916966pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_chat_bot_data_1694876916966
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
